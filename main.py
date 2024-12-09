@@ -16,6 +16,7 @@ class Date(BaseModel):
 
 # Product Model
 class Product(BaseModel):
+    id: str
     name: str
     expirationTime: int
     minSupply: int

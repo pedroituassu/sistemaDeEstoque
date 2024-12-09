@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import axios from "axios";
 import Header from "./Header";
+import MD5 from "crypto-js/md5"
+
 
 const CreateProduct = () => {
   const [product, setProduct] = useState({
+    id: "",
     name: "",
     expirationTime: "",
     minSupply: "",
@@ -21,12 +24,13 @@ const CreateProduct = () => {
   };
 
   const handleSubmit = async (e) => {
+    product.id = MD5(product.category + product.brand + product.name + product.expirationTime + product.minSupply + product.maxSupply).toString()
     e.preventDefault();
     try {
       const response = await axios.post("http://127.0.0.1:8000/products/", product);
-      alert("Product created: " + response.data.product.name);
+      alert("Produto criado: " + response.data.product.name);
     } catch (error) {
-      alert("Error creating product: " + error.message);
+      alert("Erro ao criar o produto: " + error.message);
     }
   };
 
@@ -109,13 +113,13 @@ const CreateProduct = () => {
                 className="w-full px-4 py-2 border rounded-lg"
               />
             </div>
-
-            <button
-              type="submit"
-              className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
-            >
-              Create Product
-            </button>
+              <button
+                type="submit"
+                onClick={handleSubmit}
+                className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+              >
+                Criar Produto
+              </button>
           </form>
         </div>
       </div>

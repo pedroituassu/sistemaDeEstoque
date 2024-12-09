@@ -27,19 +27,33 @@ const ProductList = () => {
             <div>
             {products.map((product, index) => (
                 <div
-                    className="w-auto max-w-4xl grid items-start bg-white p-6 rounded-lg shadow-lg mb-3 grid-cols-3 grid-rows-3"
+                    className="w-auto max-w-4xl grid items-start bg-white p-6 rounded-lg shadow-lg mb-3 grid-cols-3 grid-rows-4"
                     key={index}>
-                  <div className="italic col-span-3">
+                  <div className="italic col-span-1">
                     {product.category}
                   </div>
-                  <div className="text-2xl font-bold mb-0 col-span-2 pr-30">
-                    {product.name}
+                  <div className="col-start-4 flex flex-row justify-end">
+                    <div
+                        className="bg-blue-500 text-white text-center px-3 py-1 rounded-lg hover:bg-blue-600 transition col-start-3 mx-1">
+                      Editar
+                    </div>
+                    <div
+                        className="bg-red-500 text-white text-center px-3 py-1 rounded-lg hover:bg-red-600 transition mx-1">
+                      Excluir
+                    </div>
                   </div>
-                  <div>
-                    <b>Vencimento: </b>{product.expirationTime} dias
+
+                  <div className="text-2xl font-bold mb-0 col-span-3 pr-30">
+                    {product.name}
                   </div>
                   <div className="text-xl italic mb-1 col-span-2">
                     {product.brand}
+                  </div>
+                  <div className="col-start-4">
+                    <b>Vencimento: </b>{product.expirationTime} dias
+                  </div>
+                  <div className="text-[12px] text- italic col-span-3">
+                    {product.id}
                   </div>
                   <div>
                     <b>Min - Max: </b>{product.minSupply} - {product.maxSupply}
