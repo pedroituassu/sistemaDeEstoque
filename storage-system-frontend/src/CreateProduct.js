@@ -54,7 +54,7 @@ const CreateProduct = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium">Tempo de vencimento:</label>
+              <label className="block text-sm font-medium">Tempo de vencimento (dias):</label>
               <input
                 type="number"
                 name="expirationTime"
