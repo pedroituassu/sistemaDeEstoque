@@ -11,12 +11,26 @@ const ProductList = () => {
         const response = await axios.get("http://127.0.0.1:8000/products/");
         setProducts(response.data);
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Erro ao buscar produtos:", error);
       }
     };
-
     fetchProducts();
   }, []);
+
+  const updateProduct = async (product_id) => {
+
+  }
+
+  const deleteProduct = async (product_id) => {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/products/${product_id}`);
+      alert(`Produto deletado com sucesso!`);
+      setProducts(products.filter((product) => product.id !== product_id));
+    } catch (error) {
+      console.error("Erro ao deletar produto:", error);
+      alert("Falha ao deletar produto. Tente novamente.");
+    }
+  };
 
   return (
     <div>
@@ -38,7 +52,9 @@ const ProductList = () => {
                       Editar
                     </div>
                     <div
-                        className="bg-red-500 text-white text-center px-3 py-1 rounded-lg hover:bg-red-600 transition mx-1">
+                        className="bg-red-500 text-white text-center px-3 py-1 rounded-lg hover:bg-red-600 transition mx-1"
+                        onClick={() => deleteProduct(product.id)}
+                    >
                       Excluir
                     </div>
                   </div>
@@ -63,7 +79,10 @@ const ProductList = () => {
             }
             </div>
         ) : (
-            <p className="text-center text-gray-500">Nenhum produto encontrado.</p>
+            <div className="flex flex-col items-center">
+              <p className="text-center text-gray-500">Nenhum produto encontrado.</p>
+              <p><a href="/create-product" className="text-center text-sky-500">Criar um produto</a></p>
+            </div>
         )}
       </div>
     </div>
