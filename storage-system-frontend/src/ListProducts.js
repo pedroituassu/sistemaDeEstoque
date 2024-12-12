@@ -17,9 +17,10 @@ const ProductList = () => {
     fetchProducts();
   }, []);
 
-  const updateProduct = async (product_hash) => {
 
-  }
+  // const updateProduct = async (product_hash) => {
+  //
+  // }
 
   const deleteProduct = async (product_hash) => {
     try {
@@ -38,10 +39,10 @@ const ProductList = () => {
       <div className="min-h-screen flex flex-col items-center gap-y-8 bg-blue-50">
         <h1 className="text-3xl font-bold my-6">Produtos</h1>
         {products.length > 0 ? (
-            <div>
+            <div className="w-5/12">
             {products.map((product, index) => (
                 <div
-                    className="w-auto max-w-4xl grid items-start bg-white p-6 rounded-lg shadow-lg mb-3 grid-cols-3 grid-rows-4"
+                    className="grid items-start bg-gray-50 p-6 rounded-lg shadow-lg mb-3 grid-cols-3 grid-rows-4 hover:bg-white hover:scale-105 transition duration-300 ease-in-out"
                     key={index}>
                   <div className="italic col-span-1">
                     {product.category}
