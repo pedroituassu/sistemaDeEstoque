@@ -17,15 +17,15 @@ const ProductList = () => {
     fetchProducts();
   }, []);
 
-  const updateProduct = async (product_id) => {
+  const updateProduct = async (product_hash) => {
 
   }
 
-  const deleteProduct = async (product_id) => {
+  const deleteProduct = async (product_hash) => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/products/${product_id}`);
+      await axios.delete(`http://127.0.0.1:8000/products/${product_hash}`);
       alert(`Produto deletado com sucesso!`);
-      setProducts(products.filter((product) => product.id !== product_id));
+      setProducts(products.filter((product) => product.hash !== product_hash));
     } catch (error) {
       console.error("Erro ao deletar produto:", error);
       alert("Falha ao deletar produto. Tente novamente.");
@@ -53,7 +53,7 @@ const ProductList = () => {
                     </div>
                     <div
                         className="bg-red-500 text-white text-center px-3 py-1 rounded-lg hover:bg-red-600 transition mx-1"
-                        onClick={() => deleteProduct(product.id)}
+                        onClick={() => deleteProduct(product.hash)}
                     >
                       Excluir
                     </div>
@@ -69,7 +69,7 @@ const ProductList = () => {
                     <b>Vencimento: </b>{product.expirationTime} dias
                   </div>
                   <div className="text-[12px] text- italic col-span-3">
-                    {product.id}
+                    {product.hash}
                   </div>
                   <div>
                     <b>Min - Max: </b>{product.minSupply} - {product.maxSupply}

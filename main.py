@@ -1,99 +1,82 @@
-from fastapi import FastAPI, HTTPException
+import mysql.connector
+
+from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import List, Optional
-from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# Date Model
-class Date(BaseModel):
-    year: int
-    month: int
-    day: int
-    hour: int
-    minute: int
 
 # Product Model
 class Product(BaseModel):
-    id: str
+    hash: str
+    category: str
+    brand: str
     name: str
     expirationTime: int
     minSupply: int
     maxSupply: int
-    category: str
-    brand: str
 
-# ItemMovement Model
-class ItemMovement(BaseModel):
-    product: Product
-    amount: int
 
-# Purchase Model
-class Purchase(BaseModel):
-    items: List[ItemMovement]
-    itemAmount: int
-    description: str
-    date: Date
-    type: str
-    receiver: Optional[str]
+def db_add_product(product: Product):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd="vexH5Ac$Pc&x39%!Gyd1",
+        database="sistemaDeEstoque"
+    )
+    mycursor = mydb.cursor()
 
-# Delivery Model
-class Delivery(BaseModel):
-    items: List[ItemMovement]
-    itemAmount: int
-    description: str
-    date: Date
-    sender: Optional[str]
+    sql = "INSERT INTO produtos (hash, category, brand, name, expirationTime, minSupply, maxSupply) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    val = (product.hash, product.category, product.brand, product.name, product.expirationTime, product.minSupply, product.maxSupply)
 
-# Client Model
-class Client(BaseModel):
-    name: str
-    cpf: int
-    email: str
-    cellphone: int
-    password: str
-    purchases: List[Purchase]
+    mycursor.execute(sql, val)
 
-# Provider Model
-class Provider(BaseModel):
-    name: str
-    cpf: int
-    email: str
-    cellphone: int
-    password: str
-    company: str
-    cnpj: int
-    deliveries: List[Delivery]
+    mydb.commit()
+    mycursor.close()
+    mydb.close()
 
-# Admin Model
-class Admin(BaseModel):
-    name: str
-    cpf: int
-    email: str
-    cellphone: int
-    password: str
-    registration: int
 
-products_db = []
+def db_list_products():
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd="vexH5Ac$Pc&x39%!Gyd1",
+        database="sistemaDeEstoque"
+    )
+    mycursor = mydb.cursor()
+    sql = "SELECT * FROM produtos"
+    mycursor.execute(sql)
+    myresult = mycursor.fetchall()
+
+    products =[]
+    for product in myresult:
+        products.append(Product(hash=product[1], category=product[2], brand=product[3], name=product[4], expirationTime=product[5], minSupply=product[6], maxSupply=product[7]))
+    mycursor.close()
+    mydb.close()
+
+    return products
+
+
+def db_delete_product(item_hash):
+    mydb = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        passwd="vexH5Ac$Pc&x39%!Gyd1",
+        database="sistemaDeEstoque"
+    )
+    mycursor = mydb.cursor()
+    sql = "DELETE FROM produtos WHERE hash = %s"
+    val = (item_hash,)
+    mycursor.execute(sql, val)
+    mydb.commit()
+    mycursor.close()
+    mydb.close()
 
 # Example Endpoint
 @app.get("/")
 def read_root():
     return {"message": "Storage System API is running!"}
-
-@app.get("/clients")
-def get_clients():
-    # Here you can mock data or connect to a database
-    example_client = Client(
-        name="John Doe",
-        cpf=123456789,
-        email="john.doe@example.com",
-        cellphone=987654321,
-        password="securepassword",
-        purchases=[],
-    )
-    return [example_client]
 
 
 # Allow all origins for development purposes
@@ -105,22 +88,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # Endpoint to create a new product
 @app.post("/products/")
 def create_product(product: Product):
-    products_db.append(product)
+    db_add_product(product)
     return {"message": "Produto criado com sucesso!", "product": product}
+
 
 # Endpoint to get all products
 @app.get("/products/")
 def get_products():
-    return products_db
+    return db_list_products()
 
-@app.delete("/products/{product_id}")
-def delete_product(product_id: str):
-    global products_db
-    for product in products_db:
-        if product.id == product_id:
-            products_db.remove(product)
-            return {"message": "Produto deletado com sucesso!", "product": product}
-    raise HTTPException(status_code=404, detail="Product not found")
+
+@app.delete("/products/{product_hash}")
+def delete_product(product_hash: str):
+    db_delete_product(product_hash)
+    return {"message": "Produto deletado com sucesso!"}
