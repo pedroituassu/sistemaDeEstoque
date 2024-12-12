@@ -6,13 +6,14 @@ import MD5 from "crypto-js/md5"
 
 const CreateProduct = () => {
   const [product, setProduct] = useState({
-    id: "",
+    hash: "",
+    category: "",
+    brand: "",
     name: "",
     expirationTime: "",
     minSupply: "",
     maxSupply: "",
-    category: "",
-    brand: "",
+
   });
 
   const handleChange = (e) => {
@@ -24,7 +25,7 @@ const CreateProduct = () => {
   };
 
   const handleSubmit = async (e) => {
-    product.id = MD5(product.category + product.brand + product.name + product.expirationTime + product.minSupply + product.maxSupply).toString()
+    product.hash = MD5(product.category + product.brand + product.name + product.expirationTime + product.minSupply + product.maxSupply).toString()
     e.preventDefault();
     try {
       const response = await axios.post("http://127.0.0.1:8000/products/", product);
@@ -42,26 +43,49 @@ const CreateProduct = () => {
           <h1 className="text-2xl font-bold mb-6">Criar novo produto</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
+              <label className="block text-sm font-medium">Categoria:</label>
+              <input
+                  type="text"
+                  name="category"
+                  value={product.category}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2 border rounded-lg"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium">Marca:</label>
+              <input
+                  type="text"
+                  name="brand"
+                  value={product.brand}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2 border rounded-lg"
+              />
+            </div>
+            <div>
               <label className="block text-sm font-medium">Nome:</label>
               <input
-                type="text"
-                name="name"
-                value={product.name}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border rounded-lg"
+                  type="text"
+                  name="name"
+                  value={product.name}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2 border rounded-lg"
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium">Tempo de vencimento (dias):</label>
               <input
-                type="number"
-                name="expirationTime"
-                value={product.expirationTime}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border rounded-lg"
+                  type="number"
+                  name="expirationTime"
+                  value={product.expirationTime}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2 border rounded-lg"
               />
             </div>
 
@@ -69,57 +93,35 @@ const CreateProduct = () => {
               <div>
                 <label className="block text-sm font-medium">Quantidade mínima:</label>
                 <input
-                  type="number"
-                  name="minSupply"
-                  value={product.minSupply}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 border rounded-lg"
+                    type="number"
+                    name="minSupply"
+                    value={product.minSupply}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-2 border rounded-lg"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium">Quantidade máxima:</label>
                 <input
-                  type="number"
-                  name="maxSupply"
-                  value={product.maxSupply}
-                  onChange={handleChange}
-                  required
-                  className="w-full px-4 py-2 border rounded-lg"
+                    type="number"
+                    name="maxSupply"
+                    value={product.maxSupply}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-2 border rounded-lg"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium">Categoria:</label>
-              <input
-                type="text"
-                name="category"
-                value={product.category}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border rounded-lg"
-              />
-            </div>
 
-            <div>
-              <label className="block text-sm font-medium">Marca:</label>
-              <input
-                type="text"
-                name="brand"
-                value={product.brand}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border rounded-lg"
-              />
-            </div>
-              <button
+            <button
                 type="submit"
                 onClick={handleSubmit}
                 className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
-              >
-                Criar Produto
-              </button>
+            >
+              Criar Produto
+            </button>
           </form>
         </div>
       </div>
