@@ -33,6 +33,14 @@ def create_product(product: Product):
 def get_products():
     return db.list_products()
 
+@app.get("/products/{product_hash}")
+def get_product(product_hash: str):
+    return db.get_product_by_hash(product_hash)
+
+@app.put("/products/{product_hash}")
+def edit_product(product_hash: str, product: Product):
+    db.edit_product(product_hash, product)
+    return {"message": "Produto editado com sucesso!", "product": product}
 
 @app.delete("/products/{product_hash}")
 def delete_product(product_hash: str):

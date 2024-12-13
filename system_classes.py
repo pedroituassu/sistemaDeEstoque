@@ -6,6 +6,7 @@ class Product(BaseModel):
     category: str
     brand: str
     name: str
+    unitWeight: float
     expirationTime: int
     minSupply: int
     maxSupply: int
